@@ -111,6 +111,9 @@ export function SavedTables() {
             Archivo: {selectedTable.table.file_name} | Hoja: {selectedTable.table.sheet_name} | 
             Filas: {selectedTable.rows.length}
           </p>
+          <button onClick={handleExportToExcel} className="btn btn-export-excel">
+            📥 Exportar a Excel
+          </button>
         </div>
 
         {/* Estadísticas de columnas */}

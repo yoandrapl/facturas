@@ -221,6 +221,21 @@
   box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
 }
 
+.btn-export-excel {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  color: white;
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 12px 24px;
+  margin-top: 15px;
+}
+
+.btn-export-excel:hover {
+  background: linear-gradient(135deg, #138496 0%, #0f6674 100%);
+  box-shadow: 0 6px 20px rgba(23, 162, 184, 0.4);
+  transform: translateY(-2px);
+}
+
 /* Estadísticas */
 .stats-section {
   margin-bottom: 25px;
