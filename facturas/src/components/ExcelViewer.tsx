@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import * as XLSX from 'xlsx';
+import { api } from '../services/api';
 import '../styles/ExcelViewer.css';
 
 interface TableData {
@@ -23,6 +24,8 @@ export function ExcelViewer() {
   const [itemsPerPage, setItemsPerPage] = useState<number>(10);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [columnFilters, setColumnFilters] = useState<Record<string, string>>({});
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [saveMessage, setSaveMessage] = useState<string>('');
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -176,6 +179,37 @@ export function ExcelViewer() {
     setCurrentPage(1);
   };
 
+  const handleSaveToDatabase = async () => {
+    if (!originalData) return;
+
+    const tableName = prompt('Ingresa un nombre para esta tabla:', 
+      fileName.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9_]/g, '_')
+    );
+
+    if (!tableName) return;
+
+    setIsSaving(true);
+    setSaveMessage('');
+
+    try {
+      const result = await api.saveExcel({
+        tableName,
+        fileName,
+        sheetName: selectedSheet,
+        headers: originalData.headers,
+        rows: originalData.rows,
+      });
+
+      setSaveMessage(`✅ ${result.message} (${result.rowCount} filas)`);
+      setTimeout(() => setSaveMessage(''), 5000);
+    } catch (error: any) {
+      setSaveMessage(`❌ Error: ${error.message}`);
+      setTimeout(() => setSaveMessage(''), 5000);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const totalPages = filteredAndSortedData
     ? Math.ceil(filteredAndSortedData.rows.length / itemsPerPage)
     : 0;
@@ -226,6 +260,13 @@ export function ExcelViewer() {
             </div>
 
             <div className="action-buttons">
+              <button 
+                onClick={handleSaveToDatabase} 
+                className="btn btn-save"
+                disabled={isSaving}
+              >
+                {isSaving ? '⏳ Guardando...' : '💾 Guardar en BD'}
+              </button>
               <button onClick={handleExportCSV} className="btn btn-export">
                 📥 Exportar CSV
               </button>
@@ -235,6 +276,11 @@ export function ExcelViewer() {
                 </button>
               )}
             </div>
+            {saveMessage && (
+              <div className={`save-message ${saveMessage.startsWith('✅') ? 'success' : 'error'}`}>
+                {saveMessage}
+              </div>
+            )}
           </div>
 
           <div className="pagination-info">
