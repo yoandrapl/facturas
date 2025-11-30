@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001/api';
+const API_URL = "http://localhost:3001/api";
 
 export interface SaveExcelRequest {
   tableName: string;
@@ -37,16 +37,16 @@ export const api = {
   // Guardar Excel en la base de datos
   saveExcel: async (data: SaveExcelRequest) => {
     const response = await fetch(`${API_URL}/save-excel`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Error al guardar');
+      throw new Error(error.error || "Error al guardar");
     }
 
     return response.json();
@@ -55,9 +55,9 @@ export const api = {
   // Obtener lista de tablas guardadas
   getTables: async (): Promise<{ success: boolean; tables: ExcelTable[] }> => {
     const response = await fetch(`${API_URL}/tables`);
-    
+
     if (!response.ok) {
-      throw new Error('Error al obtener tablas');
+      throw new Error("Error al obtener tablas");
     }
 
     return response.json();
@@ -66,9 +66,9 @@ export const api = {
   // Obtener datos de una tabla específica
   getTable: async (id: number): Promise<{ success: boolean } & TableData> => {
     const response = await fetch(`${API_URL}/tables/${id}`);
-    
+
     if (!response.ok) {
-      throw new Error('Error al obtener tabla');
+      throw new Error("Error al obtener tabla");
     }
 
     return response.json();
@@ -77,12 +77,12 @@ export const api = {
   // Eliminar tabla
   deleteTable: async (id: number) => {
     const response = await fetch(`${API_URL}/tables/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Error al eliminar');
+      throw new Error(error.error || "Error al eliminar");
     }
 
     return response.json();

@@ -1,12 +1,12 @@
-import Database from 'better-sqlite3';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import Database from "better-sqlite3";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const dbPath = path.join(__dirname, 'facturas.db');
+const dbPath = path.join(__dirname, "facturas.db");
 const db = new Database(dbPath);
 
 // Crear tabla de configuración de tablas Excel
