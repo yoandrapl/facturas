@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api } from '../services/api';
 import type { ExcelTable } from '../services/api';
+import * as XLSX from 'xlsx';
 import '../styles/SavedTables.css';
 
 export function SavedTables() {
@@ -54,6 +55,24 @@ export function SavedTables() {
     } catch (error: any) {
       alert(`Error al eliminar: ${error.message}`);
     }
+  };
+
+  const handleExportToExcel = () => {
+    if (!selectedTable) return;
+
+    // Crear una nueva hoja de trabajo con los datos
+    const wsData = [
+      selectedTable.table.columns, // Encabezados
+      ...selectedTable.rows.map((row: any) => row.data) // Filas de datos
+    ];
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, selectedTable.table.sheet_name);
+
+    // Generar archivo Excel
+    const fileName = `${selectedTable.table.table_name}_exportado.xlsx`;
+    XLSX.writeFile(wb, fileName);
   };
 
   if (loading && tables.length === 0) {
